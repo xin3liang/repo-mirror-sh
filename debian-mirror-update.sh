@@ -9,10 +9,20 @@ DEST=/opt/repo-liuxl/repos/debian
 # Debian version(s) to mirror
 DIST=jessie,jessie-backports,jessie-updates #,\
 #stretch,stretch-backports,stretch-updates
+
+# Debian sections to mirror
+SECTION=main,main/debian-installer,contrib,non-free
  
 # architecture
 ARCH=arm64
- 
+
+# extra
+EXTRA=doc,tools
+
+
+# installer
+DI_DIST=jessie
+
 # -----------------------------------------
 # check whether we're online:
  
@@ -25,16 +35,20 @@ if [ "$?" -eq 0 ]; then
  #sudo su mirror -c \
 # "
 debmirror ${DEST} \
- --method=rsync \
- --nosource \
+ --method=http \
  --host=${HOST} \
  --root=/debian \
  --dist=${DIST} \
- --section=main \
+ --section=${SECTION} \
  --arch=${ARCH} \
- --passive --cleanup -p \
- --slow-cpu $VERBOSE
-#" 
+ --rsync-extra=${EXTRA} \
+ --di-dist=${DI_DIST} \
+ --slow-cpu $VERBOSE \
+ --progress
+#"   --passive --cleanup -p \
  
  logger -t mirror[$$] finished updating Debian mirror
 fi
+
+cd /opt/repo-liuxl/repos/debian/dists/jessie/main/installer-arm64/current/images
+wget http://ftp.hk.debian.org/debian/dists/jessie/main/installer-arm64/current/images/SHA256SUMS

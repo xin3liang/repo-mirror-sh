@@ -19,13 +19,15 @@ arch=arm64
 # Section=      -s      # Section (One of the following - main/restricted/universe/multiverse).
 # You can add extra file with $Section/debian-installer. ex: main/debian-installer,universe/debian-installer,multiverse/debian-installer,restricted/debian-installer
 #
-section=main,universe,multiverse,restricted
+section=main,main/debian-installer,universe,multiverse,restricted
+EXTRA=doc,tools
+DI_DIST=xenial,xenial-updates,xenial-proposed
 
 # Release=      -d      # Release of the system (...Hardy, Intrepid... Lucid, Precise, Quantal, Saucy, Trusty ), and the -updates and -security ( -backports can be added if desired)
 # List of updated releases in: https://wiki.ubuntu.com/Releases
 #
 
-release=xenial,xenial-security,xenial-updates,xenial-backports
+release=xenial,xenial-security,xenial-updates,xenial-backports,xenial-proposed
 
 # Server=       -h      # Server name, minus the protocol and the path at the end
 # CHANGE "*" to equal the mirror you want to create your mirror from. au. in Australia  ca. in Canada.
@@ -54,13 +56,14 @@ outPath=/opt/repo-liuxl/repos/ubuntu-ports
 # Start script
 #
 debmirror       -a $arch \
-                --no-source \
                 -s $section \
                 -h $server \
                 -d $release \
                 -r $inPath \
                 --progress \
                 --method=$proto \
+		--rsync-extra=${EXTRA} \
+		--di-dist=${DI_DIST} \
                 $outPath
 
 
