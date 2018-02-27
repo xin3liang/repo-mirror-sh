@@ -19,19 +19,20 @@ arch=arm64
 # Section=      -s      # Section (One of the following - main/restricted/universe/multiverse).
 # You can add extra file with $Section/debian-installer. ex: main/debian-installer,universe/debian-installer,multiverse/debian-installer,restricted/debian-installer
 #
-section=main
+section=main,contrib
 
 # Release=      -d      # Release of the system (...Hardy, Intrepid... Lucid, Precise, Quantal, Saucy, Trusty ), and the -updates and -security ( -backports can be added if desired)
 # List of updated releases in: https://wiki.ubuntu.com/Releases
 #
 
-release=jessie/updates
+release=jessie/updates,stretch/updates
 
 # Server=       -h      # Server name, minus the protocol and the path at the end
 # CHANGE "*" to equal the mirror you want to create your mirror from. au. in Australia  ca. in Canada.
 # This can be found in your own /etc/apt/sources.list file, assuming you have Ubuntu installed.
 #
 server=security.debian.org
+server=mirrors.163.com/debian-security
 
 # Dir=          -r      # Path from the main server, so http://my.web.server/$dir, Server dependant
 #
@@ -53,14 +54,15 @@ outPath=/opt/repo-liuxl/repos/debian-security
 # --nocleanup  Do not clean up the local mirror after mirroring is complete. Use this option to keep older repository
 # Start script
 #
+#               remove  --no-source 2017/11/28 \
 debmirror       -a $arch \
-                --no-source \
                 -s $section \
                 -h $server \
                 -d $release \
                 -r $inPath \
-                --progress \
                 --method=$proto \
+		--progress --nosource \
+		--proxy=http://192.168.1.108:8900 \
                 $outPath
                 #--rsync-extra=none \
 
